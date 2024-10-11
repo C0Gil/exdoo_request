@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<odoo>
+    <record id="module_category_request_exdoo" model="ir.module.category">
+        <field name="name">Exdoo Request</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="module_category_request_exdoo_scndry" model="ir.module.category">
+        <field name="name">Exdoo Request</field>
+        <field name="sequence">1</field>
+        <field name="parent_id" ref="module_category_request_exdoo"/>
+    </record>
+
+
+    
+    <record id="group_exdoo_request_user" model="res.groups">
+        <field name="name">Usuario: Solo puede ver menu</field>
+        <field name="category_id" ref="module_category_request_exdoo_scndry"/>
+    </record>
+
+    <record id="group_exdoo_request_admin" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="module_category_request_exdoo_scndry"/>
+        <field name="implied_ids" eval="[(4, ref('group_exdoo_request_user'))]"/>
+    </record>
+
+
+<!-- 
+    <record id="exdoo_request_own_rule" model="ir.rule">
+        <field name="name">Presupuestos de peliculas propios</field>
+        <field name="model_id" ref="model_presupuesto"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_pelicula_usuario'))]"/>
+    </record>
+
+    <record id="pelicula_presupuestos_todos_rule" model="ir.rule">
+        <field name="name">Presupuestos de peliculas todos</field>
+        <field name="model_id" ref="model_presupuesto"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_pelicula_administrador'))]"/>
+    </record> -->
+
+</odoo>

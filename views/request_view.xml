@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+        <field name="name">Ventas</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('exdoo_request_id', '=', active_id)]</field>
+    </record>
+
+    <record id="action_purchase_order" model="ir.actions.act_window">
+        <field name="name">Compras</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('exdoo_request_id', '=', active_id)]</field>
+    </record>
+
+    <record id="action_invoice_view" model="ir.actions.act_window">
+        <field name="name">Facturas de la Solicitud</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('exdoo_request_id', '=', active_id)]</field>
+    </record>
+    
+
+    <record id="view_request_form" model="ir.ui.view">
+        <field name="name">View.form.exdoo.request</field>
+        <field name="model">exdoo.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="borrador,confirmado"/>
+                    <button string="Confirmar" type="object" name="confirm_request" class="oe_highlight" states="borrador"/>
+                    <button string="Cancelar" type="object" name="cancel_request" states="borrador,confirmado" />
+                    <button string="Regresar a borrador" type="object" name="draft_request" states="cancelado,confirmado"/>
+
+                    <button string="Facturar" type="object" name="create_invoice" class="oe_highlight" states="confirmado"/>
+                </header>
+
+                <sheet>
+
+                    <div class="o-form-buttonbox oe_button_box position-relative text-end o_not_full">
+                        <button name="%(action_sale_order)d" type="action" class="bnt oe_stat_button " icon="fa-pencil-square-o"
+                            attrs="{'invisible': [('sale_order_count', '=', 0)]}">
+                                                        
+                            <field name="sale_order_count" widget="statinfo" string="Ventas"/>
+
+                        </button>
+                                               
+
+                        <button name="%(action_purchase_order)d" type="action" class="bnt oe_stat_button " icon="fa-credit-card"
+                            attrs="{'invisible': [('purchase_order_count', '=', 0)]}">
+                                                        
+                            <field name="purchase_order_count"  widget="statinfo" string="Compras"/>
+
+                        </button>      
+                        
+                        
+                        <button name="%(action_invoice_view)d" type="action" string="Ver Facturas" class="bnt oe_stat_button " icon="fa-pencil"
+                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                    
+                            <field name="invoice_count" widget="statinfo" string="Facturas"/>
+
+                        </button>
+                        
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" class="o_field_widget o_readonly_modifier o_required_modifier o_field_char" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group colspan="2">
+                        <group col="1">
+                            <field name="date" readonly="1"/>                         
+                        </group>
+
+                        <group col="1">
+                            <field name="approval_date" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group colspan="2" string="Informacion del vendedor">
+                        <group col="1">
+                            <field name="user" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+                        </group>
+
+                        <group col="1">
+                            <field name="company_id" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+                        </group>
+                    </group>
+
+                    <group colspan="2" string="Informacion cliente">
+                        <group col="1">
+                            <field name="customer" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+                            
+                        </group>
+
+                        <group col="1">
+                            <field name="payment_term" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+                            <field name="domain_payment_term" attrs="{'readonly': [('state', '!=', 'borrador')]}" invisible="1"/>
+                            <field name="currency_id" attrs="{'readonly': [('state', '!=', 'borrador')]}"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Solicitud de Presupuesto">
+
+                            <field name="details_id" string="Lineas de Venta" attrs="{'readonly': [('state', '!=', 'borrador')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_of_measurement"/>
+                                    <field name="tax_id" widget="many2many_tags"/>
+                                    <field name="unit_price"/>
+                                    <field name="rd_tax" readonly="1"/>
+                                    <field name="is_admin_user" invisible="1"/>
+                                    <field name="discount" attrs="{'readonly': [('is_admin_user', '=', False)]}"/>
+                                    <field name="rd_subtotal" readonly="1"/>
+                                    <field name="rd_total" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+        
+                            </field>
+        
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-9"></div>
+                                    <div class="col-3 align-items-right">
+                                        <div class="row">
+                                            <div class="col text-right"><label for="base"/></div>
+                                            <div class="col"><field name="base" nolabel="1"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col"><label for="taxes"/></div>
+                                            <div class="col"><field name="taxes" nolabel="1"/></div>                                    
+                                        </div>
+                                        <div class="row">                                    
+                                            <div class="col">
+                                                <h4 class="font-weight-bold"> <label for="total"/> </h4>
+                                            </div>
+                                            <div class="col">
+                                                <h4 class="font-weight-bold"> <field name="total" nolabel="1"/> </h4>
+                                            </div>                                                                    
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </page>
+
+                        <page string="Inventario">
+                            <group>
+                                <group>
+                                    <field name="warehouse_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_request_tree" model="ir.ui.view">
+        <field name="name">View.tree.exdoo.request</field>
+        <field name="model">exdoo.request</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancelado'" decoration-success="state == 'confirmado'">
+                <field name="name"/>
+                <field name="user"/>
+                <field name="company_id"/>
+                <field name="warehouse_id"/>
+                <field name="date"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmado'" decoration-danger="state == 'cancelado'"/>                
+            </tree>
+        </field>
+    </record>
+
+
+
+</odoo>

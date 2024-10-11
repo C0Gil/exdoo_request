@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="action_open_request_model" model="ir.actions.act_window">
+        <field name="name">Solicitudes</field>
+        <field name="res_model">exdoo.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_request" name="Solicitudes" parent="sale.sale_order_menu" action="action_open_request_model"/>
+</odoo>

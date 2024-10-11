@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_usuer_exdoo_request,user access exdoo request,model_exdoo_request,group_exdoo_request_user,1,1,1,0
+access_usuer_request_details,user access request details,model_request_details,group_exdoo_request_user,1,1,1,0
+
+access_admin_exdoo_request,user admin exdoo request,model_exdoo_request,group_exdoo_request_admin,1,1,1,0
+access_admin_request_details,user admin request details,model_request_details,group_exdoo_request_admin,1,1,1,0
